@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 11/03/20 17:58:58 by Eclipse SUMO netedit Version 1.7.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <input>
+        <sumo-net-file value="C:\Users\Tienan%20Li\Documents\sumoTest\test.net.xml"/>
+    </input>
+
+    <output>
+        <output-file value="C:\Users\Tienan%20Li\Documents\sumoTest\test.net.xml"/>
+    </output>
+
+    <processing>
+        <geometry.min-radius.fix.railways value="false"/>
+        <geometry.max-grade.fix value="false"/>
+        <offset.disable-normalization value="true"/>
+        <lefthand value="false"/>
+    </processing>
+
+    <junctions>
+        <no-internal-links value="true"/>
+        <no-turnarounds value="true"/>
+        <junctions.corner-detail value="5"/>
+        <junctions.limit-turn-speed value="5.5"/>
+        <rectangular-lane-cut value="false"/>
+    </junctions>
+
+    <pedestrian>
+        <walkingareas value="false"/>
+    </pedestrian>
+
+    <netedit>
+        <route-files value="C:\Users\Tienan%20Li\Documents\sumoTest\helloWorld.rou.xml"/>
+    </netedit>
+
+    <report>
+        <aggregate-warnings value="5"/>
+    </report>
+
+</configuration>
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <route edges="main" color="yellow" id="route_0"/>
+    <vType id="vType_0" length="5" carFollowModel="IDM" tau = "1.5" minGap = "2" accel="2" decel="4" sigma="0" speedDev = "0"/>
+
+
+
+    <!--non-LC flow -->
+    <!--input
+    scenario 500: each 400; 
+    scenario 1500: probabiliy = 1500/3600*0.8 = 0.3333
+    sceario 2000: probabiliy = 2000/3600*0.8 = 0.4444
+
+    <flow id="flow_00" type="vType_0" route="route_0" begin="0.00" end="600.00" probability = "0.3333"
+    	departLane = "0" arrivalLane = "0" departSpeed = "30"/>
+    <flow id="flow_11" type="vType_0" route="route_0" begin="0.00" end="600.00" probability = "0.3333"	departLane = "1" arrivalLane = "1" departSpeed = "30"/>
+	-->
+
+
+    <!--LC flow -->
+    <!--input
+    scenario 500: each 100; 
+    scenario 1500: probabiliy = 1500/3600*0.2 = 0.0833
+    sceario 2000: probabiliy = 2000/3600*0.2 = 0.1111
+
+    <flow id="flow_10" type="vType_0" route="route_0" begin="0.00" end="600.00" probability = "0.0833"	departLane = "1" arrivalLane = "0" departSpeed = "30"/>
+    <flow id="flow_01" type="vType_0" route="route_0" begin="0.00" end="600.00" probability = "0.0833"	departLane = "0" arrivalLane = "1" departSpeed = "30"/>
+	-->  
+</routes>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on Fri Nov  6 21:47:28 2020 by Eclipse SUMO GUI Version 1.7.0
+-->
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="test.net.xml"/>
+        <route-files value="test.rou.xml"/>
+    </input>
+
+    <time>
+        <step-length value="0.1"/>
+    </time>
+
+    <processing>
+        <lateral-resolution value="3"/>
+    </processing>
+
+    <traci_server>
+        <remote-port value="56193"/>
+    </traci_server>
+
+    <gui_only>
+        <gui-settings-file value="test.view.cfg.xml"/>
+        <tracker-interval value="0.1"/>
+    </gui_only>
+
+</configuration>
