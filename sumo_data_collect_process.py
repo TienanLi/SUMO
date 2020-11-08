@@ -14,6 +14,7 @@ input_volume = 500 #veh/h/lane
 LC_rate = 0.2
 duration = 600 #s
 sim_resolution = .1 #s
+np.random.seed(1)
 
 
 # clear images folder
@@ -58,9 +59,7 @@ while duration > curTime:
             arrL = "1"
         traci.vehicle.add(str(veh_id), "route_0", typeID = "vType_0", departSpeed = "30",
             departLane = "1", arrivalLane = arrL)
-        veh_ids.append(veh_id)
         veh_id += 1
-        addVeh = True
 
     if np.random.choice(2, p=[1 - vehicle_probability, vehicle_probability]):
         if np.random.choice(2, p=[1 - LC_rate, LC_rate]):
@@ -69,9 +68,7 @@ while duration > curTime:
             arrL = "0"
         traci.vehicle.add(str(veh_id), "route_0", typeID = "vType_0", departSpeed = "30",
             departLane = "0", arrivalLane = arrL)
-        veh_ids.append(veh_id)
         veh_id += 1
-        addVeh = True
 
     for i in traci.vehicle.getIDList():
             data.append([i, curTime,
@@ -86,6 +83,7 @@ while duration > curTime:
     #     curTime += 1
     #     traci.gui.screenshot('View #0', os.getcwd() + "/images/" + str(curTime) + ".png")
 
+print(veh_id)
 
 df = pd.DataFrame(data)
 df.to_csv(output_path)
