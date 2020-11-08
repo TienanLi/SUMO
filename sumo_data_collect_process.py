@@ -12,12 +12,9 @@ from matplotlib.collections import LineCollection
 
 input_volume = 500 #veh/h/lane
 LC_rate = 0.2
-duration = 600 #s
+duration = 100 #s
 sim_resolution = .1 #s
 
-# video_name = 'sumo_stop_and_go.mp4'
-# video_name = 'sumo_near_saturated.mp4'
-# video_name = 'sumo_light.mp4'
 
 # clear images folder
 pic_list = os.listdir('images')
@@ -58,11 +55,11 @@ veh_id = 0
 
 #     # save to simulation data to file
 #     curTime = traci.simulation.getTime()
-#     step += 1
+#     # step += 1
 #     # if 500 <= step <= 2000:
 #     #     index += 1
 #     #     traci.gui.screenshot('View #0', os.getcwd() + "/images/" + str(index) + ".png")
-
+#
 #     for veh_id in veh_ids:
 #         data.append([veh_id, curTime,
 #                      traci.vehicle.getLaneID(veh_id),
@@ -72,41 +69,43 @@ veh_id = 0
 
 vehicle_probability = input_volume / 3600
 while duration > curTime:
-    traci.simulationStep()
-    curTime += sim_resolution
-
     if np.random.choice(2, p=[1 - vehicle_probability, vehicle_probability]):
         if np.random.choice(2, p=[1 - LC_rate, LC_rate]):
             arrL = "0"
         else:
             arrL = "1"
-        traci.vehicle.add(str(veh_id), "route_0", typeID = "vType_0", departSpeed = "30", 
+        traci.vehicle.add(str(veh_id), "route_0", typeID = "vType_0", departSpeed = "30",
             departLane = "1", arrivalLane = arrL)
         veh_ids.append(veh_id)
         veh_id += 1
+        addVeh = True
+
     if np.random.choice(2, p=[1 - vehicle_probability, vehicle_probability]):
         if np.random.choice(2, p=[1 - LC_rate, LC_rate]):
             arrL = "1"
         else:
             arrL = "0"
-        traci.vehicle.add(str(veh_id), "route_0", typeID = "vType_0", departSpeed = "30", 
+        traci.vehicle.add(str(veh_id), "route_0", typeID = "vType_0", departSpeed = "30",
             departLane = "0", arrivalLane = arrL)
         veh_ids.append(veh_id)
         veh_id += 1
+        addVeh = True
 
-    # if 500 * 0.1 <= curTime <= 2000 * 0.1:
-    #     curTime += 1
-    #     traci.gui.screenshot('View #0', os.getcwd() + "/images/" + str(curTime) + ".png")
-
-    for i in veh_ids:
-        try:
+    for i in traci.vehicle.getIDList():
             data.append([i, curTime,
                      traci.vehicle.getLaneID(i),
                      traci.vehicle.getPosition(i),
                      traci.vehicle.getSpeed(i)])
-        except:
-            veh_ids.remove(i)
 
+    traci.simulationStep()
+    curTime += sim_resolution
+
+
+
+
+    # if 500 * 0.1 <= curTime <= 2000 * 0.1:
+    #     curTime += 1
+    #     traci.gui.screenshot('View #0', os.getcwd() + "/images/" + str(curTime) + ".png")
 
 
 df = pd.DataFrame(data)
@@ -134,7 +133,8 @@ df = df.drop(index=0)
 posi = df[4].str.replace('(', '')
 posi1 = posi.str.replace(')', '')
 posi_split = posi1.str.split(', ', expand=True)
-veh_ID = df[1].str.replace('flow_', '')
+# veh_ID = df[1].str.replace('flow_', '')
+veh_ID = df[1]
 time = pd.to_numeric(df[2])
 road_ID = df[3].str.replace('main_', '')
 position_x = pd.to_numeric(posi_split[0])
@@ -184,8 +184,8 @@ for allVeh_0 in pd.unique(lane0_all_data[0]):
     lc.set_linewidth(0.5)
     line = axs.add_collection(lc)
 fig.colorbar(line, ax=axs)
-axs.set_xlim(0, 1000)
-axs.set_ylim(100, 2000)
+axs.set_xlim(0, duration)
+axs.set_ylim(100, 1000)
 plt.ylabel('Position (m)')
 plt.xlabel('Time (s)')
 plt.title('Lane 0 trajectory plot - volume: ' + str(input_volume) +'/h/lane')
