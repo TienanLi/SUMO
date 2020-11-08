@@ -12,7 +12,7 @@ from matplotlib.collections import LineCollection
 
 input_volume = 500 #veh/h/lane
 LC_rate = 0.2
-duration = 100 #s
+duration = 600 #s
 sim_resolution = .1 #s
 
 
@@ -49,24 +49,6 @@ data = []
 veh_ids = []
 curTime = 0
 veh_id = 0
-# while traci.simulation.getMinExpectedNumber() > 0:
-#     traci.simulationStep()
-#     veh_ids = traci.vehicle.getIDList()
-
-#     # save to simulation data to file
-#     curTime = traci.simulation.getTime()
-#     # step += 1
-#     # if 500 <= step <= 2000:
-#     #     index += 1
-#     #     traci.gui.screenshot('View #0', os.getcwd() + "/images/" + str(index) + ".png")
-#
-#     for veh_id in veh_ids:
-#         data.append([veh_id, curTime,
-#                      traci.vehicle.getLaneID(veh_id),
-#                      traci.vehicle.getPosition(veh_id),
-#                      traci.vehicle.getSpeed(veh_id)])
-
-
 vehicle_probability = input_volume / 3600
 while duration > curTime:
     if np.random.choice(2, p=[1 - vehicle_probability, vehicle_probability]):
@@ -100,9 +82,6 @@ while duration > curTime:
     traci.simulationStep()
     curTime += sim_resolution
 
-
-
-
     # if 500 * 0.1 <= curTime <= 2000 * 0.1:
     #     curTime += 1
     #     traci.gui.screenshot('View #0', os.getcwd() + "/images/" + str(curTime) + ".png")
@@ -115,19 +94,11 @@ traci.close()
 sys.stdout.flush()
 
 
-# # make video
-# if path.exists(video_name):
-#     os.remove(video_name)
-#
-# os.system('ffmpeg -r 10 -i images/%d.png -b:v 1500k -vcodec mpeg4 ' + video_name)
-
-
 # input data
 del df
 df = pd.read_csv('simulation_data_test_' + str(input_volume) + '.csv', sep=',', header=None)
 
 # Data processing
-
 df = df.drop(index=0)
 # col1: veh id; col2: time; col3: lane id; col4: position; col5: speed
 posi = df[4].str.replace('(', '')
@@ -151,20 +122,6 @@ lane1_all_data = pd.DataFrame()
 lane0_all_data = lane0_all_data.append(sorted_by_veh_id[sorted_by_veh_id[2] == '0'])
 lane1_all_data = lane1_all_data.append(sorted_by_veh_id[sorted_by_veh_id[2] == '1'])
 
-# split info by lane (only CF)
-# lane0_cf_data = pd.DataFrame()
-# lane1_cf_data = pd.DataFrame()
-# two_lane_cf_data = pd.DataFrame()
-
-# for veh in pd.unique(sorted_by_veh_id[0]):
-#     veh_info = sorted_by_veh_id.loc[sorted_by_veh_id[0] == veh]
-#     veh_lane_id = veh_info[2]
-#     if len(pd.unique(veh_lane_id)) == 1:
-#         two_lane_cf_data = two_lane_cf_data.append(veh_info)
-#         if pd.unique(veh_lane_id) == '0':
-#             lane0_cf_data = lane0_cf_data.append(veh_info)
-#         else:
-#             lane1_cf_data = lane1_cf_data.append(veh_info)
 
 # plots
 # cf +lc lane0 with speed  color:seismic_r
@@ -184,7 +141,7 @@ for allVeh_0 in pd.unique(lane0_all_data[0]):
     lc.set_linewidth(0.5)
     line = axs.add_collection(lc)
 fig.colorbar(line, ax=axs)
-axs.set_xlim(0, duration)
+axs.set_xlim(0, duration*1.1)
 axs.set_ylim(100, 1000)
 plt.ylabel('Position (m)')
 plt.xlabel('Time (s)')
